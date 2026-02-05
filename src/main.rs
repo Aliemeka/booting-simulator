@@ -1,3 +1,4 @@
+use rusty_audio::Audio;
 use std::collections::HashMap;
 use std::io;
 use std::thread::sleep;
@@ -107,7 +108,12 @@ fn main() {
         ("hibernate".to_string(), PowerStates::Hibernate),
     ]);
 
-    println!("Computer is starting up! Welcome user!");
+    let mut audio = Audio::new();
+    audio.add("startup", "./sounds/startup.wav");
+    audio.add("processing", "./sounds/processing.wav");
+
+    println!("Computer is starting up!");
+    audio.play("startup");
     println!("Please enter your name:");
 
     let username = read_user_input();
@@ -117,6 +123,7 @@ fn main() {
 
         println!("««Resuming machine task! This will take 10 seconds»»");
         println!("Processing................................................");
+        audio.play("processing");
         sleep(Duration::from_secs(10));
 
         println!("Machine task completed successfully!");
