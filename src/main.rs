@@ -25,7 +25,7 @@ fn request_user_rest_command(command_map: &HashMap<String, PowerStates>) -> &Pow
     println!(
         "Enter any of the following commands: \"off\", \"sleep\", \"reboot\", \"shutdown\", \"hibernate\""
     );
-    let user_input = read_user_input();
+    let user_input = read_user_input().to_lowercase();
     if let Some(command) = command_map.get(&user_input) {
         command
     } else {
