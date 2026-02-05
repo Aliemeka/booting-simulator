@@ -21,20 +21,6 @@ fn read_user_input() -> String {
     input.trim().to_string()
 }
 
-fn request_user_rest_command(command_map: &HashMap<String, PowerStates>) -> &PowerStates {
-    println!("\nWill you like to rest your computer?");
-    println!(
-        "Enter any of the following commands: \"off\", \"sleep\", \"reboot\", \"shutdown\", \"hibernate\""
-    );
-    let user_input = read_user_input().to_lowercase();
-    if let Some(command) = command_map.get(&user_input) {
-        command
-    } else {
-        println!("Sorry, I don't recognize that command 🤨");
-        request_user_rest_command(command_map)
-    }
-}
-
 fn reboot_computer() {
     println!("\nOkie dokie!🫡 Rebooting your computer now....");
     println!("Stopping all running applications...");
@@ -99,6 +85,45 @@ fn hibernate_computer() {
     read_user_input();
 }
 
+impl PowerStates {
+    fn get_command(command_map: &HashMap<String, PowerStates>) -> &PowerStates {
+        println!("\nWill you like to rest your computer?");
+        println!(
+            "Enter any of the following commands: \"off\", \"sleep\", \"reboot\", \"shutdown\", \"hibernate\""
+        );
+        let user_input = read_user_input().to_lowercase();
+        if let Some(command) = command_map.get(&user_input) {
+            command
+        } else {
+            println!("Sorry, I don't recognize that command 🤨");
+            Self::get_command(command_map)
+        }
+    }
+
+    fn run_power_state(&self) -> bool {
+        match self {
+            PowerStates::Off => {
+                println!("Okie dokie!🫡 Turning off your computer now....");
+                println!("Screen and system is going to off mode in 3 seconds...");
+                sleep(Duration::from_secs(3));
+                println!("Computer is off!");
+                let can_resume = off_computer();
+                if !can_resume {
+                    return false;
+                }
+            }
+            PowerStates::Sleep => sleep_computer(),
+            PowerStates::Reboot => reboot_computer(),
+            PowerStates::Shutdown => {
+                shut_down_messages();
+                return false;
+            }
+            PowerStates::Hibernate => hibernate_computer(),
+        }
+        true
+    }
+}
+
 fn main() {
     let command_mapping = HashMap::from([
         ("off".to_string(), PowerStates::Off),
@@ -128,25 +153,9 @@ fn main() {
 
         println!("Machine task completed successfully!");
 
-        let user_command = request_user_rest_command(&command_mapping);
-        match user_command {
-            PowerStates::Off => {
-                println!("Okie dokie!🫡 Turning off your computer now....");
-                println!("Screen and system is going to off mode in 3 seconds...");
-                sleep(Duration::from_secs(3));
-                println!("Computer is off!");
-                let can_resume = off_computer();
-                if !can_resume {
-                    break;
-                }
-            }
-            PowerStates::Sleep => sleep_computer(),
-            PowerStates::Reboot => reboot_computer(),
-            PowerStates::Shutdown => {
-                shut_down_messages();
-                break;
-            }
-            PowerStates::Hibernate => hibernate_computer(),
+        let user_command = PowerStates::get_command(&command_mapping);
+        if !user_command.run_power_state() {
+            break;
         }
     }
 }
