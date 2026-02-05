@@ -29,13 +29,13 @@ fn request_user_rest_command(command_map: &HashMap<String, PowerStates>) -> &Pow
     if let Some(command) = command_map.get(&user_input) {
         command
     } else {
-        println!("Invalid command entered. Please try again.");
+        println!("Sorry, I don't recognize that command 🤨");
         request_user_rest_command(command_map)
     }
 }
 
 fn reboot_computer() {
-    println!("\nOkie dokie! Rebooting your computer now....");
+    println!("\nOkie dokie!🫡 Rebooting your computer now....");
     println!("Stopping all running applications...");
     sleep(Duration::from_secs(3));
     println!("Saving all your work and shutting down to restart...");
@@ -44,7 +44,7 @@ fn reboot_computer() {
 }
 
 fn shut_down_messages() {
-    println!("\nOkie dokie! Shutting down your computer now....");
+    println!("\nOkie dokie!🫡 Shutting down your computer now....");
     println!("Stopping all running applications...");
     sleep(Duration::from_secs(3));
     println!("Saving all your work and shutting down...");
@@ -75,15 +75,15 @@ fn off_computer() -> bool {
 }
 
 fn sleep_computer() {
-    println!("\nOkie dokie! Putting computer to sleep...");
+    println!("\nOkie dokie!🫡 Putting computer to sleep...");
     sleep(Duration::from_secs(3));
-    println!("Sleeping ...");
+    println!("Sleeping 😴...");
     println!("Computer is now in sleep mode. Press any key to wake it up.");
     read_user_input();
 }
 
 fn hibernate_computer() {
-    println!("\nOkie dokie! Putting computer into hibernate mode...");
+    println!("\nOkie dokie!🫡 Putting computer into hibernate mode...");
     println!("Saving all your work and hibernating computer...");
     sleep(Duration::from_secs(5));
     println!("Going into a deep sleep in...");
@@ -113,7 +113,7 @@ fn main() {
     let username = read_user_input();
 
     loop {
-        println!("\nWelcome {username}!, Glad your back!");
+        println!("\nWelcome {username}! Glad your back!");
 
         println!("««Resuming machine task! This will take 10 seconds»»");
         println!("Processing................................................");
@@ -124,7 +124,7 @@ fn main() {
         let user_command = request_user_rest_command(&command_mapping);
         match user_command {
             PowerStates::Off => {
-                println!("Okie dokie! Turning off your computer now....");
+                println!("Okie dokie!🫡 Turning off your computer now....");
                 println!("Screen and system is going to off mode in 3 seconds...");
                 sleep(Duration::from_secs(3));
                 println!("Computer is off!");
