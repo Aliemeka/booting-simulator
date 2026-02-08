@@ -107,10 +107,7 @@ impl PowerStates {
                 println!("Screen and system is going to off mode in 3 seconds...");
                 sleep(Duration::from_secs(3));
                 println!("Computer is off!");
-                let can_resume = off_computer();
-                if !can_resume {
-                    return false;
-                }
+                return off_computer();
             }
             PowerStates::Sleep => sleep_computer(),
             PowerStates::Reboot => reboot_computer(),
@@ -136,6 +133,7 @@ fn main() {
     let mut audio = Audio::new();
     audio.add("startup", "./sounds/startup.wav");
     audio.add("processing", "./sounds/processing.wav");
+    audio.add("shutdown", "./sounds/shutdown.wav");
 
     println!("Computer is starting up!");
     audio.play("startup");
@@ -155,6 +153,8 @@ fn main() {
 
         let user_command = PowerStates::get_command(&command_mapping);
         if !user_command.run_power_state() {
+            audio.play("shutdown");
+            sleep(Duration::from_secs(4));
             break;
         }
     }
